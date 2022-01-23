@@ -1,0 +1,13 @@
+﻿@model List<NavbarItem>
+
+<ul class="navbar-nav navbar-right">
+@if(Model != null)
+{
+        @foreach(NavbarItem item in Model)
+    {
+        <li class="nav-item">
+            <a class="nav-link @(item.IsActive ? "active" : "")" asp-controller="@item.Controller" asp-action="@item.Action">@item.Text</a>
+        </li>
+    }   
+}  
+</ul>

@@ -1,0 +1,34 @@
+html {
+  font-size: 18px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 20px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    background-color: #e6e6e6
+}
+
+main {
+    background-color: #ffffff;
+}
+
+footer {
+    background-color: #ffffff;
+}
+
+.container {
+    max-width: 60%;
+}
+
+.fill {
+    min-height: 90vh;
+}
