@@ -8,17 +8,19 @@ namespace FedjazContest.Components
         private List<NavbarItem> items = new List<NavbarItem>
         {
             new NavbarItem("Home", "Home"),
+            new NavbarItem("About", "Home", "About"),
             new NavbarItem("Account", "Account"),
             new NavbarItem("Contests", "Contests"),
         };
         public IViewComponentResult Invoke()
         {
             string? controller = ViewContext.RouteData.Values["controller"] as string;
-            if(controller != null)
+            string? action = ViewContext.RouteData.Values["action"] as string;
+            if(controller != null && action != null)
             {
                 foreach(NavbarItem item in items)
                 {
-                    if(item.Controller == controller)
+                    if(item.Controller == controller && item.Action == action)
                     {
                         item.IsActive = true;
                         break;

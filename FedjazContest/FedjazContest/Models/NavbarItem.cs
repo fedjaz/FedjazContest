@@ -2,8 +2,8 @@
 {
     public class NavbarItem
     {
-        public string Text { get; set; } = "";
-        public string Controller { get; set; } = "";
+        public string Text { get; set; } = "Home";
+        public string Controller { get; set; } = "Home";
         public string Action { get; set; } = "Index";
         public bool IsActive { get; set; } = false;
 
