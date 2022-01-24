@@ -20,12 +20,22 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="fill">
-            @RenderBody()
-        </main>
-    </div>
 
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+
+            </div>
+            <div class="col-7 main-content fill">
+                @RenderBody()
+            </div>
+            <div class="col">
+                @await Component.InvokeAsync("Account")
+            </div>
+        </div>
+        
+    </div>
+        
     <footer class="text-muted ">
         <div class="container p-3">
             &copy; 2022 - FedjazContest - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
