@@ -9,13 +9,11 @@ namespace FedjazContest.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
-        private readonly Data.ApplicationDbContext dbContext;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, Data.ApplicationDbContext dbContext)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
-            this.dbContext = dbContext;
         }
 
         public IActionResult Index()
@@ -48,7 +46,6 @@ namespace FedjazContest.Controllers
                 };
                 
                 await userManager.CreateAsync(user, registrationModel.Password);
-                await dbContext.SaveChangesAsync();
                 await userManager.AddToRoleAsync(user, "user");
                 await signInManager.SignInAsync(user, true);
 
@@ -60,23 +57,24 @@ namespace FedjazContest.Controllers
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CheckUsername(string username)
+        [HttpPost]
+        public async Task<IActionResult> CheckUsername(string Username)
         {
-            ApplicationUser user = await userManager.FindByNameAsync(username);
+            ApplicationUser user = await userManager.FindByNameAsync(Username);
             return Json(user == null);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> CheckEmail(string email)
+        [HttpPost]
+        public async Task<IActionResult> CheckEmail(string Email)
         {
-            ApplicationUser user = await userManager.FindByEmailAsync(email);
+            ApplicationUser user = await userManager.FindByEmailAsync(Email);
             return Json(user == null);
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
-            return View();
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
     }
 }

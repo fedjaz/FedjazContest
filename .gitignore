@@ -350,5 +350,4 @@ MigrationBackup/
 .ionide/
 
 # Lib files
-bootstrap/
-jquery/
+lib/

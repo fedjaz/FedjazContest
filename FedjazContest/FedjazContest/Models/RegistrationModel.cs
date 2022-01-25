@@ -18,12 +18,12 @@ namespace FedjazContest.Models
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter your Username")]
         [StringLength(40, ErrorMessage = "Username is too big")]
         [RegularExpression("^[a-zA-Z0-9.'-_]+$", ErrorMessage = "Username contains restricted characters")]
-        [Remote(controller: "Account", action: "CheckUsername", ErrorMessage = "Username is already in use")]
+        [Remote("CheckUsername", "Account", ErrorMessage = "Username is already in use", HttpMethod = "POST")]
         public string Username { get; set; } = "";
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter your Email")]
         [EmailAddress(ErrorMessage = "Email is invalid")]
-        [Remote(controller: "Account", action: "CheckEmail", ErrorMessage = "Email is already in use")]
+        [Remote("CheckEmail", "Account", ErrorMessage = "Email is already in use", HttpMethod = "POST")]
         public string Email { get; set; } = "";
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Enter your Password")]
