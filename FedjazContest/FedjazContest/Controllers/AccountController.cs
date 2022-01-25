@@ -34,8 +34,20 @@ namespace FedjazContest.Controllers
         [HttpPost]
         public async Task<IActionResult> Register([FromForm]RegistrationModel registrationModel)
         {
+            if (!await CheckUsername(registrationModel.Username))
+            {
+                ModelState.AddModelError(nameof(registrationModel.Username), "This Username is already in use");
+            }
+
+            if (!await CheckEmail(registrationModel.Email))
+            {
+                ModelState.AddModelError(nameof(registrationModel.Email), "This Email is already in use");
+            }
+
             if (ModelState.IsValid)
             {
+                
+
                 ApplicationUser user = new ApplicationUser()
                 {
                     FirstName = registrationModel.FirstName,
@@ -57,18 +69,16 @@ namespace FedjazContest.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CheckUsername(string Username)
+        private async Task<bool> CheckUsername(string username)
         {
-            ApplicationUser user = await userManager.FindByNameAsync(Username);
-            return Json(user == null);
+            ApplicationUser user = await userManager.FindByNameAsync(username);
+            return user == null;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CheckEmail(string Email)
+        private async Task<bool> CheckEmail(string email)
         {
-            ApplicationUser user = await userManager.FindByEmailAsync(Email);
-            return Json(user == null);
+            ApplicationUser user = await userManager.FindByEmailAsync(email);
+            return user == null;
         }
 
         public async Task<IActionResult> Logout()
