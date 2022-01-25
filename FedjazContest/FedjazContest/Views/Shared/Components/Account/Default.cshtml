@@ -10,11 +10,10 @@
             <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Login</a>
             <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Register</a>    
         </div>
-        
     }
     else 
     {
-
+        <h3 class="text-center">@Model.ApplicationUser.UserName</h3>
     }
     </div>
 }

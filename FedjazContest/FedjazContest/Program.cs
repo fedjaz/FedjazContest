@@ -1,4 +1,5 @@
 using FedjazContest.Data;
+using FedjazContest.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,11 +11,29 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireDigit = true;
+    options.Password.RequireNonAlphanumeric = false;
+})
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+using(IServiceScope scope = app.Services.CreateScope())
+{
+    RoleManager<IdentityRole>? roleManager = scope.ServiceProvider.GetService(typeof(RoleManager<IdentityRole>)) as RoleManager<IdentityRole>;
+
+    if (roleManager != null)
+    {
+        await CreateRoles(roleManager);
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -39,6 +58,20 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages();
+
 
 app.Run();
+
+
+static async Task CreateRoles(RoleManager<IdentityRole> roleManager)
+{
+    if(await roleManager.FindByNameAsync("user") == null)
+    {
+        await roleManager.CreateAsync(new IdentityRole("user"));
+    }
+
+    if (await roleManager.FindByNameAsync("admin") == null)
+    {
+        await roleManager.CreateAsync(new IdentityRole("admin"));
+    }
+}

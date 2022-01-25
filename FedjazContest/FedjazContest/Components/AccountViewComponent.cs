@@ -1,20 +1,38 @@
-﻿using FedjazContest.Models;
+﻿using FedjazContest.Entities;
+using FedjazContest.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FedjazContest.Components
 {
     public class AccountViewComponent : ViewComponent
     {
-        public IViewComponentResult Invoke()
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly SignInManager<ApplicationUser> signInManager;
+
+        public AccountViewComponent(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
-            AccountComponentModel accountComponentModel;
-            if (true)
+            this.userManager = userManager;
+            this.signInManager = signInManager;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            string? controller = ViewContext.RouteData.Values["controller"] as string;
+            if(controller != null && controller == "Account")
             {
-                accountComponentModel = new AccountComponentModel(false, "/");
+                return Content("");
+            }
+
+            AccountComponentModel accountComponentModel;
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                ApplicationUser user = await userManager.FindByNameAsync(User.Identity.Name);
+                accountComponentModel = new AccountComponentModel(user);
             }
             else
             {
-                accountComponentModel = null;
+                accountComponentModel = new AccountComponentModel(false, "/");
             }
 
             return View(accountComponentModel);
