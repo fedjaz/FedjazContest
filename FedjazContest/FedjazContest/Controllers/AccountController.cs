@@ -26,6 +26,41 @@ namespace FedjazContest.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<ActionResult> Login([FromForm]LoginModel loginModel)
+        {
+            ApplicationUser user = await userManager.FindByNameAsync(loginModel.EmailOrUsername);
+            if(user == null)
+            {
+                user = await userManager.FindByEmailAsync(loginModel.EmailOrUsername);
+            }
+
+            if(user == null)
+            {
+                ModelState.AddModelError(nameof(loginModel.EmailOrUsername), "There is no user with this Email or Username");
+            }
+            else if(!await userManager.CheckPasswordAsync(user, loginModel.Password))
+            {
+                ModelState.AddModelError(nameof(loginModel.Password), "Password is incorrect");
+            }
+            else if (!user.EmailConfirmed)
+            {
+                ModelState.AddModelError(nameof(loginModel.EmailOrUsername), "Please confirn your email before entering your account");
+            }
+
+
+            if (ModelState.IsValid && user != null)
+            {
+                await signInManager.SignInAsync(user, isPersistent: true);
+
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                return View(loginModel);
+            }
+        } 
+
         public IActionResult Register()
         {
             return View();

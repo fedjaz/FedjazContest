@@ -1,0 +1,24 @@
+﻿@model LoginModel
+
+<div class="about">
+    <h3 class="display-3 text-center">Sign In to your Account</h3>
+    <form method="post" asp-controller="Account" asp-action="Login" enctype="multipart/form-data">
+        <div class="row justify-content-md-center">
+            <div class="col-4">
+                <label asp-for="EmailOrUsername">Email or Username</label>
+                <input type="text" class="form-control" asp-for="EmailOrUsername">
+                <span asp-validation-for="EmailOrUsername" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="row justify-content-md-center mt-3">
+            <div class="col-4">
+                <label asp-for="Password">Password</label>
+                <input type="password" class="form-control" asp-for="Password">
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end mt-3" style="margin-right: 32vh;">
+            <button type="submit" class="btn btn-primary">Login</button>
+        </div>
+    </form>
+</div>
