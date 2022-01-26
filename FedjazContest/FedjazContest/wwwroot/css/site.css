@@ -31,7 +31,7 @@ footer {
 }
 
 .about-text {
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .account-info {
@@ -40,4 +40,11 @@ footer {
     margin-left: 1vh;
     background-color: #ffffff;
     border-radius: 15px;
+}
+
+.avatar {
+    width: 30%;
+    height: 30%;
+    border-radius: 10px;
+    border: 2px solid;
 }

@@ -1,8 +1,6 @@
 ﻿@model AccountComponentModel
 
-@if(Model != null)
-{
-    <div class="position-fixed account-info">
+@if(Model != null){    <div class="position-fixed account-info">
     @if (!Model.IsLogged)
     {
         <h3 class="text-center">Login or Register</h3>
@@ -13,7 +11,17 @@
     }
     else 
     {
-        <h3 class="text-center">@Model.ApplicationUser.UserName</h3>
+        <img src=@Url.Action("GetAvatar", "Account") class="avatar"/>
+        <br />
+        <span>@($"{Model.ApplicationUser.FirstName} {Model.ApplicationUser.LastName}")</span>
+        <br />
+        <span class="text-muted">@Model.ApplicationUser.UserName</span>
+        <ul class="list-group">
+            <a asp-action="Home" class="list-group-item">Profile</a>
+            <a asp-action="Home" class="list-group-item">Contests</a>
+            <a asp-action="Home" class="list-group-item">Tasks</a>
+            <a asp-action="Home" class="list-group-item">Attempts</a>
+        </ul>
     }
     </div>
 }
