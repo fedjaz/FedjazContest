@@ -1,5 +1,6 @@
 ﻿using FedjazContest.Entities;
 using FedjazContest.Models;
+using FedjazContest.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,11 +10,15 @@ namespace FedjazContest.Controllers
     {
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly ApplicationDbContext dbContext;
+        private readonly IWebHostEnvironment environment;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext, IWebHostEnvironment environment)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+            this.dbContext = dbContext;
+            this.environment = environment;
         }
 
         public IActionResult Index()
@@ -92,6 +97,18 @@ namespace FedjazContest.Controllers
                     EmailConfirmed = true,
                 };
                 
+                if(registrationModel.Avatar != null)
+                {
+                    if(Tools.ImageConverter.TryImageToBase64(registrationModel.Avatar, 800, out string result))
+                    {
+                        Image image = new Image(result);
+                        dbContext.Images.Add(image);
+                        await dbContext.SaveChangesAsync();
+
+                        user.ImageId = image.Id;
+                    }
+                }
+
                 await userManager.CreateAsync(user, registrationModel.Password);
                 await userManager.AddToRoleAsync(user, "user");
                 await signInManager.SignInAsync(user, true);
@@ -104,6 +121,44 @@ namespace FedjazContest.Controllers
             }
         }
 
+        public async Task<IActionResult> GetAvatar(string? userId)
+        {
+            ApplicationUser? user = null;
+            if(userId == null)
+            {
+                if(User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    user = await userManager.FindByNameAsync(User.Identity.Name);
+                }
+            }
+            else
+            {
+                user = await userManager.FindByIdAsync(userId);
+            }
+            
+            if(user == null)
+            {
+                return NotFound();
+            }
+
+            Image? avatar = dbContext.Images.FirstOrDefault(img => img.Id == user.ImageId);
+            if(avatar != null)
+            {
+                MemoryStream stream = Tools.ImageConverter.Base64ToImage(avatar.Base64);
+                return File(stream.ToArray(), "image/png");
+            }
+            else
+            {
+                return File(Path.Combine(environment.WebRootPath, "images", "avatar.png"), "image/png");
+            }
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
         private async Task<bool> CheckUsername(string username)
         {
             ApplicationUser user = await userManager.FindByNameAsync(username);
@@ -114,12 +169,6 @@ namespace FedjazContest.Controllers
         {
             ApplicationUser user = await userManager.FindByEmailAsync(email);
             return user == null;
-        }
-
-        public async Task<IActionResult> Logout()
-        {
-            await signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
         }
     }
 }
