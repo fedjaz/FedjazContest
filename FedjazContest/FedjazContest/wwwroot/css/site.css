@@ -96,3 +96,23 @@ footer {
     margin-right: -5vh;
     margin-left: -5vh;
 }
+
+.bio-rectangle {
+    margin-top: 7vh;
+    border: solid 2px;
+    padding: 1vh;
+    border-radius: 15px;
+    min-height: 20vh;
+}
+
+.bio-name {
+    position: relative;
+    left: 5vh;
+    bottom: 3.75vh;
+    background-color: white;
+    font-size: 3vh;
+}
+
+.bio-text {
+    margin-left: -3vh;
+}

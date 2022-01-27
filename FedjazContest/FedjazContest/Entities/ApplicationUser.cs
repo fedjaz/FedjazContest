@@ -8,5 +8,8 @@ namespace FedjazContest.Entities
         public string LastName {  get; set; } = "";
         public int ImageId { get; set; }
         public string EmailConfirmationCode { get; set; } = "";
+        public string Bio { get; set; } = "";
+        public int Score { get; set; } = 0;
+        public int TasksSolved { get; set; } = 0;
     }
 }

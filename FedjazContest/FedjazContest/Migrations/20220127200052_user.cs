@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace FedjazContest.Migrations
 {
-    public partial class images : Migration
+    public partial class user : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -33,6 +33,9 @@ namespace FedjazContest.Migrations
                     LastName = table.Column<string>(type: "text", nullable: false),
                     ImageId = table.Column<int>(type: "integer", nullable: false),
                     EmailConfirmationCode = table.Column<string>(type: "text", nullable: false),
+                    Bio = table.Column<string>(type: "text", nullable: false),
+                    Score = table.Column<int>(type: "integer", nullable: false),
+                    TasksSolved = table.Column<int>(type: "integer", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),

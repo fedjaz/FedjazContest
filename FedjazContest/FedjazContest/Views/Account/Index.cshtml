@@ -11,16 +11,21 @@
             </div>
             <div class="col-4 offset-4">
                 <h5>Community activity:</h5>
-                <span>Rating: 100</span>
+                <span>@($"Rating: {0}")</span>
                 <br />
-                <span>Points: 100</span>
+                <span>@($"Score: {Model.Score}")</span>
                 <br />
-                <span>Tasks solved: 100</span>
+                <span>@($"Tasks solved: {Model.TasksSolved}")</span>
                 <br />
-                <span>Blog posts: 100</span>
+                <span>@($"Blog posts: {0}")</span>
             </div>
         </div>
         <h1 class="mt-3">@($"{Model.FirstName} {Model.LastName}")</h1>
         <h3 class="text-muted">@Model.UserName</h3>
+
+        <div class="bio-rectangle">
+            <span class="bio-name">Bio</span>
+            <span class="bio-text">@(Model.Bio == "" ? "Here could be your bio!" : Model.Bio)</span>
+        </div>
     </div>    
 }
