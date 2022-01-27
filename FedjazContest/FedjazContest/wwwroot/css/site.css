@@ -30,21 +30,69 @@ footer {
     padding-bottom: 1vh;
 }
 
+.profile {
+    padding-top: 5vh;
+    padding-left: 10vh;
+    padding-right: 10vh;
+    padding-bottom: 1vh;
+}
+
 .about-text {
     font-size: 20px;
 }
 
 .account-info {
-    padding: 3vh;
-    margin-top: 1vh;
+    padding: 2vh;   
+    width: 35vh;
+    margin-top: 2vh;
     margin-left: 1vh;
+    margin-right: 3vh;
     background-color: #ffffff;
     border-radius: 15px;
 }
 
 .avatar {
-    width: 30%;
-    height: 30%;
+    width: 10vh;
+    height: 10vh;
     border-radius: 10px;
     border: 2px solid;
+}
+
+.avatar-big {
+    width: 30vh;
+    height: 30vh;
+    border-radius: 10px;
+    border: 2px solid;
+    margin-top: -15vh;
+    background-color: white;
+}
+
+.profile-link:link {
+    color: black;
+    text-decoration: none;
+}
+
+.profile-link:visited {
+    color: black;
+}
+
+.profile-link:hover {
+    color: cornflowerblue;
+    text-decoration: none;
+}
+
+.account-element {
+    margin-left: 0.25vh;
+}
+
+.profile-list {
+    margin-left: -2vh;
+    margin-right: -2vh;
+}
+
+.rectangle {
+    height: 15vh;
+    background-color: #f5f5f5;
+    margin-right: -5vh;
+    margin-left: -5vh;
 }

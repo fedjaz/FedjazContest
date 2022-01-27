@@ -1,6 +1,8 @@
 ﻿@model AccountComponentModel
 
-@if(Model != null){    <div class="position-fixed account-info">
+@if(Model != null)
+{
+    <div class="position-fixed account-info">
     @if (!Model.IsLogged)
     {
         <h3 class="text-center">Login or Register</h3>
@@ -11,16 +13,30 @@
     }
     else 
     {
-        <img src=@Url.Action("GetAvatar", "Account") class="avatar"/>
+        <img src=@Url.Action("GetAvatar", "Account") class="avatar account-element"/>
         <br />
-        <span>@($"{Model.ApplicationUser.FirstName} {Model.ApplicationUser.LastName}")</span>
+        <span class="account-element">@($"{Model.ApplicationUser.FirstName} {Model.ApplicationUser.LastName}") </span>
         <br />
-        <span class="text-muted">@Model.ApplicationUser.UserName</span>
-        <ul class="list-group">
-            <a asp-action="Home" class="list-group-item">Profile</a>
-            <a asp-action="Home" class="list-group-item">Contests</a>
-            <a asp-action="Home" class="list-group-item">Tasks</a>
-            <a asp-action="Home" class="list-group-item">Attempts</a>
+        <span class="text-muted account-element">@Model.ApplicationUser.UserName</span>
+        <ul class="list-group list-group-flush profile-list">
+            <li class="list-group-item">
+                <a asp-controller="Account" asp-action="Index" class="profile-link"><i class="far fa-user fa-fw"></i> Profile</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Account" asp-action="Settings" class="profile-link"><i class="far fa-sun fa-fw"></i> Setings</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-action="Home" class="profile-link"><i class="far fa-clock fa-fw"></i> My Attempts</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-action="Home" class="profile-link"><i class="far fa-flag fa-fw"></i> My Contests</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-action="Home" class="profile-link"><i class="far fa-file-code fa-fw"></i> My Tasks</a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Account" asp-action="Logout" class="profile-link"><i class="fa fa-user fa-fw"></i> Logout</a>
+            </li>
         </ul>
     }
     </div>

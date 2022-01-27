@@ -9,8 +9,9 @@ namespace FedjazContest.Components
         {
             new NavbarItem("Home", "Home"),
             new NavbarItem("About", "Home", "About"),
-            new NavbarItem("Account", "Account"),
+            new NavbarItem("Creating tasks", "Home", "Creating tasks"),
             new NavbarItem("Contests", "Contests"),
+            new NavbarItem("Attempts", "Attempts"),
         };
         public IViewComponentResult Invoke()
         {

@@ -21,9 +21,27 @@ namespace FedjazContest.Controllers
             this.environment = environment;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string? username = null)
         {
-            return View();
+            ApplicationUser? user = null;
+
+            if(username != null)
+            {
+                user = await userManager.FindByNameAsync(username);
+            }
+            else if(User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                user = await userManager.FindByNameAsync(User.Identity.Name);
+            }
+
+            if(user != null)
+            {
+                return View(user);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
         public IActionResult Login()
