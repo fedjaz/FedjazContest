@@ -183,6 +183,11 @@ namespace FedjazContest.Controllers
             ViewBag.LeftSection = "SettingsLeftSection";
             ViewBag.LeftSectionArguments = new { active = section };
 
+            if(section == "Account")
+            {
+                return View("SettingsAccount");
+            }
+
             return View();
         }
 

@@ -1,0 +1,13 @@
+﻿@using FedjazContest.Models.Settings
+
+@model AccountModel
+
+<div class="about">
+    <form method="post" asp-controller="Account" asp-action="Settings" enctype="multipart/form-data">
+        <label asp-for="FirstName"></label>
+        <input type="text" class="form-control" asp-for="FirstName"/>
+
+        <label asp-for="LastName"></label>
+        <input type="text" class="form-control" asp-for="LastName"/>
+    </form>
+</div>
