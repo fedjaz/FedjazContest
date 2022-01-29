@@ -25,7 +25,22 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col">
+                @if(ViewBag.LeftSection != null)
+                {
+                    string? leftSection = ViewBag.LeftSection as string;
+                    if(leftSection != null)
+                    {
+                        if(ViewBag.LeftSectionArguments != null)
+                        {
+                            @await Component.InvokeAsync(leftSection, ViewBag.LeftSectionArguments);
+                        }
 
+                        else
+                        {
+                            @await Component.InvokeAsync(leftSection);
+                        }
+                    }
+                }
             </div>
             <div class="col-7 main-content fill">
                 @RenderBody()

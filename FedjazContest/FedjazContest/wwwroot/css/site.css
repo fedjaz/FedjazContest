@@ -51,6 +51,10 @@ footer {
     border-radius: 15px;
 }
 
+.settings-section {
+    margin-left: 6vh;
+}
+
 .avatar {
     width: 10vh;
     height: 10vh;

@@ -177,6 +177,21 @@ namespace FedjazContest.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Route("{controller}/{action}/{section=Account}")]
+        public IActionResult Settings(string section)
+        {
+            ViewBag.LeftSection = "SettingsLeftSection";
+            ViewBag.LeftSectionArguments = new { active = section };
+
+            return View();
+        }
+
+        //[HttpPost]
+        //public async Task<IActionResult> Settings()
+        //{
+        //    return Ok();
+        //}
+
         private async Task<bool> CheckUsername(string username)
         {
             ApplicationUser user = await userManager.FindByNameAsync(username);
