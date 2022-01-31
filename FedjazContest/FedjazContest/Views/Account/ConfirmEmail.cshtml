@@ -1,0 +1,14 @@
+﻿@model bool
+
+<div class="email-confirm">
+    <h1>Welcome!</h1>
+    @if (!Model)
+    {
+        <span>Thank you for registration! An confirmation link has been sent to your email, please follow the instructions and activate your account</span>
+    }
+    else
+    {
+        <span>Thank you for confirmation! Now you can <a asp-action="Login">login</a> to your account</span>    
+    }
+    
+</div>

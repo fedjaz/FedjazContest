@@ -127,3 +127,10 @@ footer {
 .bio-text {
     margin-left: -3vh;
 }
+
+.email-confirm {
+    font-size: 1.25em;
+    text-align: center;
+    top: 40%;
+    position: relative;
+}

@@ -9,31 +9,47 @@ namespace FedjazContest.Services
         string url;
         private readonly SmtpClient smtpClient;
         MailAddress from;
-        public EmailService(string email, string password, string smtpAddress, int port, string url)
+        private readonly IWebHostEnvironment environment;
+        public EmailService(string email, string password, string smtpAddress, int port, string url, IServiceProvider serviceProvider)
         {
             this.url = url;
             from = new MailAddress(email);
             smtpClient = new SmtpClient(smtpAddress, port);
             smtpClient.Credentials = new NetworkCredential(email, password);
             smtpClient.EnableSsl = true;
+            environment = serviceProvider.GetRequiredService<IWebHostEnvironment>();
         }
         
-        public async Task ChangeEmail(string email, string code)
+        public async Task<string> ChangeEmail(string email)
         {
             throw new NotImplementedException();
         }
 
-        public async Task ChangePasswod(string email, string code)
+        public async Task<string> ChangePassword(string email)
         {
             throw new NotImplementedException();
         }
 
-        public async Task ConfirmEmail(string email, string code)
+        public async Task<string> ConfirmEmail(string email)
         {
-            throw new NotImplementedException();
+            string code = CreateRandomCode(32);
+            string url = string.Format(this.url, code);
+            string body = string.Format(GetEmailFromFile("EmailConfirm.txt"), url);
+            await SendEmail(email, "FedjazContest - Email confirmation", body);
+
+            return code;
         }
 
-        public string CreateRandomCode(int count)
+        private string GetEmailFromFile(string name)
+        {
+            string path = Path.Combine(environment.ContentRootPath, "Emails", name);
+            using(StreamReader reader = new StreamReader(path))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        private string CreateRandomCode(int count)
         {
             List<char> chars = GetSymbols(true, true, true, true).ToList();
             StringBuilder stringBuilder = new StringBuilder();

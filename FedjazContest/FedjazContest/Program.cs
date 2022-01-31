@@ -25,12 +25,13 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 builder.Services.AddControllersWithViews();
 
 IConfigurationSection emailSection = builder.Configuration.GetSection("EmailService");
-builder.Services.AddSingleton<IEmailService, EmailService>((_) => new EmailService(
+builder.Services.AddSingleton<IEmailService, EmailService>((provider) => new EmailService(
     emailSection["Username"],
     emailSection["Password"],
     "smtp.gmail.com",
     587,
-    emailSection["Url"]));
+    emailSection["Url"],
+    provider));
 
 var app = builder.Build();
 

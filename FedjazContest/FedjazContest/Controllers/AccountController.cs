@@ -1,5 +1,6 @@
 ﻿using FedjazContest.Entities;
 using FedjazContest.Models;
+using FedjazContest.Services;
 using FedjazContest.Models.Settings;
 using FedjazContest.Data;
 using Microsoft.AspNetCore.Identity;
@@ -14,20 +15,15 @@ namespace FedjazContest.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ApplicationDbContext dbContext;
         private readonly IWebHostEnvironment environment;
+        private readonly IEmailService emailService;
 
-        private readonly Dictionary<string, string> settingsMap = new Dictionary<string, string>
-        {
-            { "ACCOUNT", "SettingsAccount" },
-            { "PASSWORD", "SettingsPassword" },
-            { "PREFERENCES", "PreferencesPassword" },
-        };
-
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext, IWebHostEnvironment environment)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext, IWebHostEnvironment environment, IEmailService emailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.dbContext = dbContext;
             this.environment = environment;
+            this.emailService = emailService;
         }
 
         public async Task<IActionResult> Index(string? username = null)
@@ -113,15 +109,14 @@ namespace FedjazContest.Controllers
 
             if (ModelState.IsValid)
             {
-                
-
                 ApplicationUser user = new ApplicationUser()
                 {
                     FirstName = registrationModel.FirstName,
                     LastName = registrationModel.LastName,
                     UserName = registrationModel.Username,
                     Email = registrationModel.Email,
-                    EmailConfirmed = true,
+                    EmailConfirmed = false,
+                    EmailConfirmationCode = await emailService.ConfirmEmail(registrationModel.Email)
                 };
                 
                 if(registrationModel.Avatar != null)
@@ -138,13 +133,29 @@ namespace FedjazContest.Controllers
 
                 await userManager.CreateAsync(user, registrationModel.Password);
                 await userManager.AddToRoleAsync(user, "user");
-                await signInManager.SignInAsync(user, true);
 
-                return RedirectToAction("Index", "Home");
+                return View("ConfirmEmail", false);
             }
             else
             {
                 return View(registrationModel);
+            }
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string code)
+        {
+            ApplicationUser? user = dbContext.Users.FirstOrDefault(user => user.EmailConfirmationCode == code && !user.EmailConfirmed);
+
+            if(user != null)
+            {
+                user.EmailConfirmed = true;
+                dbContext.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await dbContext.SaveChangesAsync();
+                return View("ConfirmEmail", true);
+            }
+            else
+            {
+                return NotFound();
             }
         }
 

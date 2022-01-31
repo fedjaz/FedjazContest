@@ -2,9 +2,8 @@
 {
     public interface IEmailService
     {
-        public string CreateRandomCode(int count);
-        public Task ConfirmEmail(string email, string code);
-        public Task ChangePasswod(string email, string code);
-        public Task ChangeEmail(string email, string code);
+        public Task<string> ConfirmEmail(string email);
+        public Task<string> ChangePassword(string email);
+        public Task<string> ChangeEmail(string email);
     }
 }

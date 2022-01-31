@@ -1,0 +1,3 @@
+﻿<h2>Welcome to FedjazContest!</h2>
+<span>This email was automatically generated.</span>
+<span>To activate your email, please click <a href="{0}">here</a>.</span>
