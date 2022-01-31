@@ -253,6 +253,8 @@ namespace FedjazContest.Controllers
                 await dbContext.SaveChangesAsync();
             }
 
+            ViewBag.LeftSection = "SettingsLeftSection";
+            ViewBag.LeftSectionArguments = new { active = "Account" };
             return View("SettingsAccount", model);
         }
 

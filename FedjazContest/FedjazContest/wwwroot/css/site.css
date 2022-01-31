@@ -30,6 +30,16 @@ footer {
     padding-bottom: 1vh;
 }
 
+.forms {
+    padding-top: 5vh;
+    padding-left: 10vh;
+    padding-right: 10vh;
+    padding-bottom: 1vh;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .profile {
     padding-top: 5vh;
     padding-left: 10vh;
@@ -131,6 +141,7 @@ footer {
 .email-confirm {
     font-size: 1.25em;
     text-align: center;
-    top: 40%;
+    transform: translateY(-50%);
+    top: 50%;
     position: relative;
 }

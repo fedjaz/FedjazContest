@@ -10,7 +10,6 @@ namespace FedjazContest.Components
             new SettingsLeftSectionModel("Account", "Account"),
             new SettingsLeftSectionModel("Password", "Password"),
             new SettingsLeftSectionModel("Preferences", "Preferences"),
-
         };
 
         public async Task<IViewComponentResult> InvokeAsync(string active)
@@ -19,7 +18,7 @@ namespace FedjazContest.Components
             {
                 foreach(SettingsLeftSectionModel section in sections)
                 {
-                    if(section.SectionName == active)
+                    if(section.SectionName.ToUpper() == active.ToUpper())
                     {
                         section.IsActive = true;
                     }
