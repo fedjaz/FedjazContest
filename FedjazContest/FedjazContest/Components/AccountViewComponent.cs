@@ -18,11 +18,13 @@ namespace FedjazContest.Components
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            //string? controller = ViewContext.RouteData.Values["controller"] as string;
-            //if(controller != null && controller == "Account")
-            //{
-            //    return Content("");
-            //}
+            string? controller = ViewContext.RouteData.Values["controller"] as string;
+            string? action = ViewContext.RouteData.Values["action"] as string;
+            if (controller != null && action != null && controller == "Account" &&
+                (action == "Login" || action == "Register"))
+            {
+                return Content("");
+            }
 
             AccountComponentModel accountComponentModel;
             if (User.Identity != null && User.Identity.IsAuthenticated)

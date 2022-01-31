@@ -176,7 +176,9 @@ namespace FedjazContest.Controllers
             }
             else
             {
-                return File(Path.Combine(environment.WebRootPath, "images", "avatar.png"), "image/png");
+                Path.Combine(environment.WebRootPath, "images", "avatar.png");
+                
+                return File(@"~/images/avatar.png", "image/png");
             }
         }
 

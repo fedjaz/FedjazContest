@@ -1,5 +1,6 @@
 using FedjazContest.Data;
 using FedjazContest.Entities;
+using FedjazContest.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,11 +18,19 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequireUppercase = false;
     options.Password.RequireLowercase = false;
     options.Password.RequiredLength = 8;
-    options.Password.RequireDigit = true;
+    options.Password.RequireDigit = false;
     options.Password.RequireNonAlphanumeric = false;
 })
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+IConfigurationSection emailSection = builder.Configuration.GetSection("EmailService");
+builder.Services.AddSingleton<IEmailService, EmailService>((_) => new EmailService(
+    emailSection["Username"],
+    emailSection["Password"],
+    "smtp.gmail.com",
+    587,
+    emailSection["Url"]));
 
 var app = builder.Build();
 
