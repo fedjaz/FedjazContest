@@ -242,7 +242,7 @@ namespace FedjazContest.Controllers
                     user.Bio = model.Bio;
                 }
 
-                if(model.Avatar != null && Tools.ImageConverter.TryImageToBase64(model.Avatar, out string result))
+                if(model.Avatar != null && Tools.ImageConverter.TryImageToBase64(model.Avatar, 800, out string result))
                 {
                     Image image = new Image(result);
                     dbContext.Images.Add(image);
