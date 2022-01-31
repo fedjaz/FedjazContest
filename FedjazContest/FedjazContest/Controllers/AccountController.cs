@@ -1,8 +1,10 @@
 ﻿using FedjazContest.Entities;
 using FedjazContest.Models;
+using FedjazContest.Models.Settings;
 using FedjazContest.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace FedjazContest.Controllers
 {
@@ -12,6 +14,13 @@ namespace FedjazContest.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ApplicationDbContext dbContext;
         private readonly IWebHostEnvironment environment;
+
+        private readonly Dictionary<string, string> settingsMap = new Dictionary<string, string>
+        {
+            { "ACCOUNT", "SettingsAccount" },
+            { "PASSWORD", "SettingsPassword" },
+            { "PREFERENCES", "PreferencesPassword" },
+        };
 
         public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext, IWebHostEnvironment environment)
         {
@@ -177,25 +186,62 @@ namespace FedjazContest.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [Authorize()]
         [Route("{controller}/{action}/{section=Account}")]
-        public IActionResult Settings(string section)
+        public async Task<IActionResult> Settings(string section)
         {
             ViewBag.LeftSection = "SettingsLeftSection";
             ViewBag.LeftSectionArguments = new { active = section };
 
-            if(section == "Account")
+            if(User.Identity == null || !User.Identity.IsAuthenticated)
             {
-                return View("SettingsAccount");
+                return NotFound();
             }
 
-            return View();
+            ApplicationUser user = await userManager.FindByNameAsync(User.Identity.Name);
+
+            if(section.ToUpper() == "ACCOUNT")
+            {
+                AccountModel model = new AccountModel(user.FirstName, user.LastName, user.Bio);
+                return View("SettingsAccount", model);
+            }
+            else
+            {
+                return NotFound();
+            }
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> Settings()
-        //{
-        //    return Ok();
-        //}
+        [HttpPost]
+        public async Task<IActionResult> SaveSettingsAccount([FromForm]AccountModel model)
+        {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                ApplicationUser user = await userManager.FindByNameAsync(User.Identity.Name);
+                user.FirstName = model.FirstName;
+                user.LastName = model.LastName;
+                if(model.Bio != null)
+                {
+                    user.Bio = model.Bio;
+                }
+
+                if(model.Avatar != null && Tools.ImageConverter.TryImageToBase64(model.Avatar, out string result))
+                {
+                    Image image = new Image(result);
+                    dbContext.Images.Add(image);
+                    await dbContext.SaveChangesAsync();
+                    user.ImageId = image.Id;
+                }
+                dbContext.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                await dbContext.SaveChangesAsync();
+            }
+
+            return View("SettingsAccount", model);
+        }
 
         private async Task<bool> CheckUsername(string username)
         {

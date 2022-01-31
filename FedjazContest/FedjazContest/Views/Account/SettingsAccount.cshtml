@@ -2,12 +2,47 @@
 
 @model AccountModel
 
-<div class="about">
-    <form method="post" asp-controller="Account" asp-action="Settings" enctype="multipart/form-data">
-        <label asp-for="FirstName"></label>
-        <input type="text" class="form-control" asp-for="FirstName"/>
-
-        <label asp-for="LastName"></label>
-        <input type="text" class="form-control" asp-for="LastName"/>
-    </form>
-</div>
+@if(Model != null)
+{
+    <div class="about">
+        <form method="post" asp-controller="Account" asp-action="SaveSettingsAccount" enctype="multipart/form-data">
+            <div class="row justify-content-md-center">
+                <div class="col-6">
+                    <img src="@Url.Action("GetAvatar", "Account")" class="avatar-settings"/>
+                    <input asp-for="Avatar" type="file" class="form-control" style="margin-top: 10px"/>
+                </div>
+        
+                <div class="col-6">
+                    <div class="row">
+                         <div class="col-4">
+                            <label asp-for="FirstName" class="text-muted">First Name: </label>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" class="form-control" asp-for="FirstName" value="@Model.FirstName" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div> 
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-4">
+                            <label asp-for="LastName" class="text-muted">Last Name:</label>
+                        </div>
+                        <div class="col-8">
+                            <input type="text" class="form-control" asp-for="LastName" value="@Model.LastName"/>
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div> 
+                    </div>
+                </div>
+            </div>
+            <div class="row justify-content-md-center mt-4">
+                <div class="col-12">
+                    <h3>Bio</h3>
+                    <span asp-validation-for="Bio" class="text-danger"></span>
+                    <textarea asp-for="Bio" class="form-control" rows="6" placeholder="Here could be your Bio">@Model.Bio</textarea>
+                </div>
+            
+            </div>
+            <button type="submit" class="btn btn-primary mt-2 mb-2" style="float: right">Save changes</button>     
+        </form>
+    </div>
+}

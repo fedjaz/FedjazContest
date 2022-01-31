@@ -62,6 +62,13 @@ footer {
     border: 2px solid;
 }
 
+.avatar-settings {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid;
+}
+
 .avatar-big {
     width: 30vh;
     height: 30vh;
@@ -111,8 +118,8 @@ footer {
 
 .bio-name {
     position: relative;
-    left: 5vh;
-    bottom: 3.75vh;
+    left: 2.5em;
+    bottom: 1.2em;
     background-color: white;
     font-size: 3vh;
 }
