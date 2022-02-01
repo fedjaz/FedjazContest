@@ -218,6 +218,10 @@ namespace FedjazContest.Controllers
                 AccountModel model = new AccountModel(user.FirstName, user.LastName, user.Bio);
                 return View("SettingsAccount", model);
             }
+            else if(section.ToUpper() == "SECURITY")
+            {
+                return View("SettingsSecurity");
+            }
             else
             {
                 return NotFound();
@@ -256,6 +260,53 @@ namespace FedjazContest.Controllers
             ViewBag.LeftSection = "SettingsLeftSection";
             ViewBag.LeftSectionArguments = new { active = "Account" };
             return View("SettingsAccount", model);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> GetPasswordDelay()
+        {
+            if(User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            ApplicationUser user = await userManager.FindByNameAsync(User.Identity.Name);
+            DateTime now = DateTime.Now;
+            double seconds = 20 - (now - user.PasswordChangeRequestDate).TotalSeconds;
+            Dictionary<string, int> delay = new Dictionary<string, int> { { "delay", -1 } };
+
+            if(seconds > 0)
+            {
+                delay["delay"] = (int)seconds;
+            }
+
+            return Json(delay);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> ChangePassword()
+        {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            ApplicationUser user = await userManager.FindByNameAsync(User.Identity.Name);
+            double seconds = 20 - (DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc) - user.PasswordChangeRequestDate).TotalSeconds;
+            Dictionary<string, bool> json = new Dictionary<string, bool> { { "success", false } };
+
+            if(seconds > 0)
+            {
+                return Json(json);
+            }
+
+            user.PasswordChangeCode = await emailService.ChangePassword(user.Email);
+            user.PasswordChangeRequestDate = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Utc);
+            dbContext.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await dbContext.SaveChangesAsync();
+
+            json["success"] = true;
+            return Json(json);
         }
 
         private async Task<bool> CheckUsername(string username)

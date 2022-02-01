@@ -8,7 +8,7 @@ namespace FedjazContest.Components
         private readonly List<SettingsLeftSectionModel> sections = new List<SettingsLeftSectionModel>
         {
             new SettingsLeftSectionModel("Account", "Account"),
-            new SettingsLeftSectionModel("Password", "Password"),
+            new SettingsLeftSectionModel("Security", "Security"),
             new SettingsLeftSectionModel("Preferences", "Preferences"),
         };
 
@@ -21,6 +21,7 @@ namespace FedjazContest.Components
                     if(section.SectionName.ToUpper() == active.ToUpper())
                     {
                         section.IsActive = true;
+                        break;
                     }
                 }
             }

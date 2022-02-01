@@ -34,6 +34,7 @@ namespace FedjazContest.Migrations
                     ImageId = table.Column<int>(type: "integer", nullable: false),
                     EmailConfirmationCode = table.Column<string>(type: "text", nullable: false),
                     PasswordChangeCode = table.Column<string>(type: "text", nullable: false),
+                    PasswordChangeRequestDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Bio = table.Column<string>(type: "text", nullable: false),
                     Score = table.Column<int>(type: "integer", nullable: false),
                     TasksSolved = table.Column<int>(type: "integer", nullable: false),

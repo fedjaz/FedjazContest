@@ -9,6 +9,7 @@ namespace FedjazContest.Entities
         public int ImageId { get; set; }
         public string EmailConfirmationCode { get; set; } = "";
         public string PasswordChangeCode { get; set; } = "";
+        public DateTime PasswordChangeRequestDate { get; set; } = DateTime.MinValue;
         public string Bio { get; set; } = "";
         public int Score { get; set; } = 0;
         public int TasksSolved { get; set; } = 0;

@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace FedjazContest.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220131154037_user")]
+    [Migration("20220201191451_user")]
     partial class user
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,6 +79,9 @@ namespace FedjazContest.Migrations
                     b.Property<string>("PasswordChangeCode")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("PasswordChangeRequestDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");

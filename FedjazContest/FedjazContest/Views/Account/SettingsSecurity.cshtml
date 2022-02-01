@@ -1,5 +1,59 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<div class="about">
+    <h3>Change Password</h3>
+    <span>To change your password, you need to click to click button below. Email with instructions will be sent to you.</span>
+    <br />
+    <button class="btn btn-primary" onclick="changePassword()">Send Email</button>
+    <br />
+    <span id="password-delay" class="text-muted"></span>
+</div>
+
+<script>
+    let delay = 0;
+    fetch(new URL('../../Account/GetPasswordDelay', document.baseURI).href)
+        .then((response) => {
+            response.json().then((data) => {
+                delay = parseInt(data['delay'], 10);
+            });
+            
+        });
+
+    setInterval(() => {
+        if(delay == 0){
+            $('#password-delay').text('You can send email again.');
+            delay = -1;
+        }
+        else if(delay > 0){
+            let minutes = Math.floor(delay / 60);
+            let seconds = 0;
+            if(minutes > 0){
+                seconds = delay % (minutes * 60);
+            }
+            else{
+                seconds = delay;
+            }
+            console.log(minutes + ":" + seconds);
+            let minutes_str = Intl.NumberFormat('en-EN', { minimumIntegerDigits : 2 }).format(minutes);
+            let seconds_str = Intl.NumberFormat('en-EN', { minimumIntegerDigits : 2 }).format(seconds);
+
+            $('#password-delay').text(`Email has been sent to you. You can send email again in ${minutes_str}:${seconds_str}.`);
+            delay--;
+        }
+    }, 1000);
+
+    function changePassword(){
+        if(delay > 0){
+            return;
+        }
+        else{
+            fetch(new URL('../../Account/ChangePassword', document.baseURI).href)
+                .then((response) => {
+                        response.json().then((data) => {
+                        let success = data['success'];
+                        if(success){
+                            delay = 20;
+                        }
+                    });
+                });
+        }
+    }
+</script>

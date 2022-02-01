@@ -27,7 +27,7 @@ namespace FedjazContest.Services
 
         public async Task<string> ChangePassword(string email)
         {
-            throw new NotImplementedException();
+            return CreateRandomCode(32);
         }
 
         public async Task<string> ConfirmEmail(string email)
