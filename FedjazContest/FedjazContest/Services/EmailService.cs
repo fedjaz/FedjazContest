@@ -27,14 +27,19 @@ namespace FedjazContest.Services
 
         public async Task<string> ChangePassword(string email)
         {
-            return CreateRandomCode(32);
+            string code = CreateRandomCode(32);
+            string url = this.url + $"Account/CreateNewPassword?code={code}";
+            string body = string.Format(GetEmailFromFile("PasswordReset.html"), url);
+            await SendEmail(email, "FedjazContest - New Password", body);
+
+            return code;
         }
 
         public async Task<string> ConfirmEmail(string email)
         {
             string code = CreateRandomCode(32);
-            string url = string.Format(this.url, code);
-            string body = string.Format(GetEmailFromFile("EmailConfirm.txt"), url);
+            string url = this.url + $"Account/ConfirmEmail?code={code}";
+            string body = string.Format(GetEmailFromFile("EmailConfirm.html"), url);
             await SendEmail(email, "FedjazContest - Email confirmation", body);
 
             return code;

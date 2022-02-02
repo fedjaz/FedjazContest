@@ -2,7 +2,7 @@
     <h3>Change Password</h3>
     <span>To change your password, you need to click to click button below. Email with instructions will be sent to you.</span>
     <br />
-    <button class="btn btn-primary" onclick="changePassword()">Send Email</button>
+    <button class="btn btn-primary mt-2" onclick="changePassword()">Send Email</button>
     <br />
     <span id="password-delay" class="text-muted"></span>
 </div>
@@ -50,7 +50,7 @@
                         response.json().then((data) => {
                         let success = data['success'];
                         if(success){
-                            delay = 20;
+                            delay = 300;
                         }
                     });
                 });

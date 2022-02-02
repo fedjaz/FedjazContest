@@ -20,8 +20,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 8;
     options.Password.RequireDigit = false;
     options.Password.RequireNonAlphanumeric = false;
-})
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+}).AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
+
 builder.Services.AddControllersWithViews();
 
 IConfigurationSection emailSection = builder.Configuration.GetSection("EmailService");
