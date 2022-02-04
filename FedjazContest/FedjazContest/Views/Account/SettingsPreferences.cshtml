@@ -1,0 +1,20 @@
+﻿@using FedjazContest.Models.Settings
+@model PreferencesModel
+
+<div class="about">
+    <form method="post" asp-action="SaveSettingsPreferences">
+        <div class="row">
+            <div class="col-6">
+                <h5>Preferred Compiler</h5>
+                <span>You can set a compiler, that will be selected by default in the task form.</span>
+                <select class="form-select" asp-for="PreferredCompiler" asp-items="@ViewBag.Compilers"></select>
+            </div>
+            <div class="col-6">
+                <h5>Preferred Language</h5>
+                <span>You can set a language of a statemet, that will be displayer by default in the task form.</span>
+                <select class="form-select" asp-for="PreferredLanguage" asp-items="@ViewBag.Languages"></select>
+            </div>
+        </div>
+        <button type="submit" class="btn btn-primary mt-2" style="float: right">Save</button>
+    </form>
+</div>

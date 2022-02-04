@@ -1,4 +1,7 @@
-﻿<div class="about">
+﻿@using FedjazContest.Services
+@inject ITaskEnvironmentProvider provider
+
+<div class="about">
     <h4 class="display-6">About</h4>
     <span class="about-text">Fedjaz Contest is an interactive competitive programming testing system. It can be used for automatic testing 
         of user's solutions for computer science tasks. Each solution is running on set of tests, that checks if solution is valid for that task.
@@ -22,8 +25,9 @@
     <span class="about-text">In the current version you can submit solutions on the following programming languages: 
     </span>
     <ul >
-        <li><b>C++</b> - GNU GCC C++ 17.</li>
-        <li><b>Python</b> - Python3 standart interpreter.</li>
-        <li><b>C#</b> - .Net 6.0 by Microsoft</li>
+        @foreach(CompilerInfo info in provider.GetAvailableCompilers())
+        {
+            <li><b>@info.DisplayName (@string.Join(", ", info.Versions))</b> - @info.Description</li>
+        }
     </ul>
 </div>

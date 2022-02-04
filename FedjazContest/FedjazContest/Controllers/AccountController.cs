@@ -6,6 +6,7 @@ using FedjazContest.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace FedjazContest.Controllers
 {
@@ -16,14 +17,16 @@ namespace FedjazContest.Controllers
         private readonly ApplicationDbContext dbContext;
         private readonly IWebHostEnvironment environment;
         private readonly IEmailService emailService;
+        private readonly ITaskEnvironmentProvider taskEnvironmentProvider;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext, IWebHostEnvironment environment, IEmailService emailService)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, ApplicationDbContext dbContext, IWebHostEnvironment environment, IEmailService emailService, ITaskEnvironmentProvider taskEnvironmentProvider)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.dbContext = dbContext;
             this.environment = environment;
             this.emailService = emailService;
+            this.taskEnvironmentProvider = taskEnvironmentProvider;
         }
 
         public async Task<IActionResult> Index(string? username = null)
@@ -163,10 +166,10 @@ namespace FedjazContest.Controllers
             }
         }
 
-        public async Task<IActionResult> GetAvatar(string? userId)
+        public async Task<IActionResult> GetAvatar(string? username)
         {
             ApplicationUser? user = null;
-            if(userId == null)
+            if(username == null)
             {
                 if(User.Identity != null && User.Identity.IsAuthenticated)
                 {
@@ -175,7 +178,7 @@ namespace FedjazContest.Controllers
             }
             else
             {
-                user = await userManager.FindByIdAsync(userId);
+                user = await userManager.FindByNameAsync(username);
             }
             
             if(user == null)
@@ -227,10 +230,47 @@ namespace FedjazContest.Controllers
             {
                 return View("SettingsSecurity");
             }
+            else if(section.ToUpper() == "PREFERENCES")
+            {
+                IEnumerable<(string, string)> compilerValues = taskEnvironmentProvider.GetCompilersValues();
+                List<SelectListItem> items = new List<SelectListItem>();
+                foreach ((string, string) value in compilerValues)
+                {
+                    items.Add(new SelectListItem(value.Item1, value.Item2));
+                }
+
+                PreferencesModel model = new PreferencesModel()
+                {
+                    PreferredCompiler = user.PreferredCompiler,
+                    PreferredLanguage = user.PreferredLanguage
+                };
+
+                ViewBag.Compilers = new SelectList(items, "Value", "Text");
+                ViewBag.Languages = new SelectList(taskEnvironmentProvider.GetAvailableLanguages());
+
+                return View("SettingsPreferences", model);
+            }
             else
             {
                 return NotFound();
             }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveSettingsPreferences([FromForm]PreferencesModel model)
+        {
+            if (User.Identity == null || !User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
+
+            ApplicationUser user = await userManager.FindByNameAsync(User.Identity.Name);   
+            user.PreferredCompiler = model.PreferredCompiler;
+            user.PreferredLanguage = model.PreferredLanguage;
+            dbContext.Entry(user).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await dbContext.SaveChangesAsync();
+
+            return RedirectToAction("Settings", new { section = "Preferences" });
         }
 
         [HttpPost]

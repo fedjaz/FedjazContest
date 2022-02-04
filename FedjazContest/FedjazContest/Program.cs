@@ -33,6 +33,8 @@ builder.Services.AddSingleton<IEmailService, EmailService>((provider) => new Ema
     emailSection["Url"],
     provider));
 
+builder.Services.AddSingleton<ITaskEnvironmentProvider, TaskEnvironmentProvider>();
+
 var app = builder.Build();
 
 using(IServiceScope scope = app.Services.CreateScope())
